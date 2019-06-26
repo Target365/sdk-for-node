@@ -820,8 +820,8 @@ function Client(ecPrivateKeyAsString, parameters) {
 
         const schema = joi.object().keys({
             strexMerchantId: joi.object().keys({
-                merchantId: joi.string().required(),
-                shortNumberId: joi.string().required(),
+              merchantId: joi.string().required(),
+              shortNumberIds: joi.array().items(joi.string()).required(),
                 password: joi.string().optional(),
             }).required()
         });

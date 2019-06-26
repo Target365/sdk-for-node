@@ -34,7 +34,7 @@ const uuidv4 = require('uuid/v4');
 const moment = require('moment');
 const Client = require('target365-sdk');
 
-let baseUrl = "https://shared.target365.io";
+let baseUrl = "https://shared.target365.io/";
 let keyName = "YOUR_KEY";
 let privateKey = "BASE64_EC_PRIVATE_KEY";
 let serviceClient = new Client(privateKey, { baseUrl, keyName });
