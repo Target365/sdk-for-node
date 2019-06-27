@@ -38,7 +38,7 @@ function Signer(ecPrivateKeyAsString) {
      */
     this.sign = (message) => {
         const buffer = key.createSign('SHA256').update(message).sign('buffer');
-        const {r, s} = asn1.ecdsaDerSig.decode(buffer, 'der')
+        const { r, s } = asn1.ecdsaDerSig.decode(buffer, 'der')
 
         // Pad r and s with 0 to length 32
         let rb = r.toBuffer();
@@ -97,7 +97,7 @@ function Verifier(ecPublicKeyAsString) {
         const r = new BN(buffer.slice(0, 32).toString('hex'), 16, 'be')
         const s = new BN(buffer.slice(32).toString('hex'), 16, 'be')
 
-        return key.createVerify('SHA256').update(message).verify(asn1.ecdsaDerSig.encode({r, s}, 'der'), 'base64');
+        return key.createVerify('SHA256').update(message).verify(asn1.ecdsaDerSig.encode({ r, s }, 'der'), 'base64');
     };
 
     /**
@@ -164,7 +164,7 @@ function Client(ecPrivateKeyAsString, parameters) {
 
     const validate = (object, schema, callback) => {
         return new Promise((resolve, reject) => {
-            joi.validate(object, schema, {abortEarly: false}, (error) => {
+            joi.validate(object, schema, { abortEarly: false }, (error) => {
                 if (error) {
                     resolve({
                         error: 'InvalidInput',
@@ -306,7 +306,7 @@ function Client(ecPrivateKeyAsString, parameters) {
 
         return validate(object, schema, () => {
             const params = parameters ? [new Param('shortNumberId', parameters.shortNumberId), new Param('keywordText', parameters.keywordText),
-                new Param('mode', parameters.mode), new Param('tag', parameters.tag)].filter((parameter) => parameter.getValue()) : [];
+            new Param('mode', parameters.mode), new Param('tag', parameters.tag)].filter((parameter) => parameter.getValue()) : [];
 
             return doGet('api/keywords', params, {
                 200: (response) => response.json()
@@ -820,8 +820,8 @@ function Client(ecPrivateKeyAsString, parameters) {
 
         const schema = joi.object().keys({
             strexMerchantId: joi.object().keys({
-              merchantId: joi.string().required(),
-              shortNumberIds: joi.array().items(joi.string()).required(),
+                merchantId: joi.string().required(),
+                shortNumberIds: joi.array().items(joi.string()).required(),
                 password: joi.string().optional(),
             }).required()
         });
