@@ -1,6 +1,6 @@
 /** 
  *  @property merchantId. Merchant id - provided by Strex.
- *  @property serviceCode. Service code - provided by Strex. See <see cref="ServiceCodes"/>.
+ *  @property serviceCode. Service code - provided by Strex.
  *  @property businessModel. Business model - optional and provided by Strex.
  *  @property age. Age requirements - typically 18 for subscriptions and adult content. Default value is 0.
  *  @property isRestricted. Whether the transaction should be flagged as restricted - provided by Strex.

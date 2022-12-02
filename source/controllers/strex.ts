@@ -39,9 +39,8 @@ export class StrexController {
 			return 'Not deleted';
 	}
 
-	public async createOneTimePasswordAsync(oneTimePassword: OneTimePassword): Promise<string> {
-		let result: any = await this.service.postAsync(`api/strex/one-time-passwords`, JSON.stringify(oneTimePassword));
-		return result?.headers.location.split('/').pop();
+	public async createOneTimePasswordAsync(oneTimePassword: OneTimePassword) {
+		await this.service.postAsync(`api/strex/one-time-passwords`, JSON.stringify(oneTimePassword));
 	}
 
 	public async getOneTimePasswordAsync(transactionId: string): Promise<OneTimePassword> {

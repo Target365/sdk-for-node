@@ -10,8 +10,8 @@ import StrexData from './strexData'
  *  @property content. Optional SMS text message content (Not used for direct billing).
  *  @property oneTimePassword. One-Time-Password. Used for Strex one-time password verification.
  *  @property deliveryMode. Delivery mode.
- *  @property statusCode. Status code. See <see cref="StatusCodes"/>.
- *  @property detailedStatusCode. Detailed status code. See <see cref="DetailedStatusCodes" />.
+ *  @property statusCode. Status code.
+ *  @property detailedStatusCode. Detailed status code.
  *  @property statusDescription. Status description.
  *  @property created. Created time.
  *  @property lastModified. Last modified time.

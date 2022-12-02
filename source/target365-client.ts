@@ -309,11 +309,11 @@ export class Target365Client {
 	 *
 	 * @param oneTimePassword One-time password object.
 	 */
-	public async createOneTimePasswordAsync(oneTimePassword: OneTimePassword): Promise<string> {
+	public async createOneTimePasswordAsync(oneTimePassword: OneTimePassword) {
 		try {
 			if (!oneTimePassword) throw 'oneTimePassword cannot be null.';
 
-			return this.strexController.createOneTimePasswordAsync(oneTimePassword);
+			this.strexController.createOneTimePasswordAsync(oneTimePassword);
 		} catch (e: any) {
 			throw e;
 		}
@@ -438,7 +438,7 @@ export class Target365Client {
 			if (!registrationSms.recipient) throw 'recipient cannot be null or empty string.';
 			if (!registrationSms.transactionId) throw 'transactionId cannot be null or empty string.';
 
-			return this.strexController.sendStrexRegistrationSmsAsync(registrationSms);
+			this.strexController.sendStrexRegistrationSmsAsync(registrationSms);
 		} catch (e: any) {
 			throw e;
 		}

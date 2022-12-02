@@ -16,8 +16,8 @@ import StrexData from "./strexData";
  * @property deliveryReportUrl. Delivery report url.
  * @property lastModified. Last modified time.
  * @property created. Created time.
- * @property statusCode. Overall status code. See <see cref="StatusCodes"/>.
- * @property detailedStatusCode. Detailed status code. See <see cref="DetailedStatusCodes"/>.
+ * @property statusCode. Overall status code.
+ * @property detailedStatusCode. Detailed status code.
  * @property statusDescription. Status description.
  * @property delivered. Whether message was delivered. Null if status is unknown.
  * @property operator id (from delivery report).
