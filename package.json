@@ -1,7 +1,7 @@
 {
-	"name": "target365",
+	"name": "target365-sdk",
 	"version": "1.0.0",
-	"description": "",
+	"description": "Target365 SDK",
 	"main": "source/target365-client.ts",
 	"scripts": {
 		"dev": "nodemon source/target365-client.ts",
