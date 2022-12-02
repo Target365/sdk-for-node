@@ -1,7 +1,6 @@
-.idea
-**/*iml
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
 
-**/target
-**/node_modules
 /.vs
-/package-lock.json~RF19136f6d.TMP
+/node_modules
