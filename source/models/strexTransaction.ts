@@ -33,5 +33,5 @@ export default interface StrexTransaction extends StrexData {
 	created: Date;
 	lastModified: Date;
 	tags: string[];
-	properties: object;
+	properties: Map<string, object>;
 }

@@ -1,36 +1,35 @@
 import axios from 'axios'
+import { Signer } from './signer';
 
 export class Service {
 	private baseUrl: string;
-	private headers: object;
+	private keyName: string;
+	private signer: Signer;
 
-	constructor(baseUrl: string, privateKey: string) {
+	constructor(baseUrl: string, keyName: string, privateKey: string) {
 		this.baseUrl = baseUrl;
-		this.headers = { 'X-ApiKey': privateKey };
+		this.keyName = keyName;
+		this.signer = new Signer(privateKey);
 	}
 
-	public async getAsync(url: string, params?: object) {
+	public async getAsync<T>(path: string, params?: any): Promise<T> {
 		try {
-			let result = await axios.get(`${this.baseUrl}${url}`, { headers: this.headers, params: params });
+			const authorization = this.getAuthorization('get', path, '', params);
+			let result = await axios.get(`${this.baseUrl}${path}`, { headers: { 'Authorization': authorization }, params: params });
 			return result.data;
 		} catch (error) {
 			if (axios.isAxiosError(error)) {
-				if (error.response?.status === 404) {
-					return null;
-				}
-				else {
-					throw error.response?.data.Message;
-				}
+				throw error.response?.data.Message;
 			} else {
 				throw 'An unexpected error occurred';
 			}
 		}
 	};
 
-	public async postAsync(url: string, data: any, params?: object) {
+	public async postAsync(path: string, data: any, params?: any) {
 		try {
-			let result = await axios.post(`${this.baseUrl}${url}`, data, { headers: this.headers, params: params });
-			return result;
+			const authorization = this.getAuthorization('post', path, data, params);
+			return await axios.post(`${this.baseUrl}${path}`, data, { headers: { 'Authorization': authorization }, params: params });
 		} catch (error) {
 			if (axios.isAxiosError(error)) {
 				throw error.response?.data.Message;
@@ -40,12 +39,13 @@ export class Service {
 		}
 	};
 
-	public async updateAsync(url: string, data: any, params?: object) {
+	public async updateAsync(path: string, data: any, params?: any) {
 		try {
-			let result = await axios.put(`${this.baseUrl}${url}`, data, { headers: this.headers, params: params });
+			const authorization = this.getAuthorization('put', path, data, params);
+			let result = await axios.put(`${this.baseUrl}${path}`, data, { headers: { 'Authorization': authorization }, params: params });
 			return result.status;
 		} catch (error) {
-			console.log('update error: '+ error);
+			console.log('update error: ' + error);
 			if (axios.isAxiosError(error)) {
 				throw error.response?.data.Message;
 			} else {
@@ -54,9 +54,10 @@ export class Service {
 		}
 	};
 
-	public async deleteAsync(url: string, params?: object) {
+	public async deleteAsync(path: string, params?: any) {
 		try {
-			return await axios.delete(`${this.baseUrl}${url}`, { headers: this.headers, params: params });
+			const authorization = this.getAuthorization('delete', path, '', params);
+			return await axios.delete(`${this.baseUrl}${path}`, { headers: { 'Authorization': authorization }, params: params });
 		} catch (error) {
 			console.log(JSON.stringify(error));
 			if (axios.isAxiosError(error)) {
@@ -66,4 +67,14 @@ export class Service {
 			}
 		}
 	};
+
+	public getAuthorization(method: string, path: string, content: any, params?: any) {
+		let parameters = '';
+
+		if (params)
+			parameters = '?' + new URLSearchParams(params).toString();
+
+		const uri = this.baseUrl + path + (parameters == '?' ? '' : parameters);
+		return this.signer.SignHeader(this.keyName, method, uri, content);
+	}
 }

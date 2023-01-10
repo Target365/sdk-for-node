@@ -23,7 +23,7 @@ export default interface Keyword {
 	enabled: boolean;
 	created: Date;
 	lastModified: Date;
-	customProperties: object;
+	customProperties: Map<string, object>;
 	tags: string[];
 	aliases: string[];
 	preAuthSettings: PreAuthSettings;

@@ -56,5 +56,5 @@ export default interface OutMessage {
 	smscTransactionId: string;
 	smscMessageParts: number;
 	tags: string[];
-	properties: object;
+	properties: Map<string, object>;
 }

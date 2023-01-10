@@ -9,14 +9,14 @@ export class PublicKeyController {
 	}
 
 	public async getServerPublicKeyAsync(keyName: string): Promise<PublicKey> {
-		return await this.service.getAsync(`api/server/public-keys/${encodeURIComponent(keyName)}`);
+		return await this.service.getAsync<PublicKey>(`api/server/public-keys/${encodeURIComponent(keyName)}`);
 	}
 
 	public async getClientPublicKeysAsync(): Promise<PublicKey[]> {
-		return await this.service.getAsync(`api/client/public-keys`);
+		return await this.service.getAsync<PublicKey[]>(`api/client/public-keys`);
 	}
 
 	public async getClientPublicKeyAsync(keyName: string): Promise<PublicKey> {
-		return await this.service.getAsync(`api/client/public-keys/${encodeURIComponent(keyName)}`);
+		return await this.service.getAsync<PublicKey>(`api/client/public-keys/${encodeURIComponent(keyName)}`);
 	}
 }

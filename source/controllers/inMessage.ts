@@ -9,6 +9,6 @@ export class InMessageController {
 	}
 
 	public async getInMessageAsync(shortNumberId: string, transactionId: string): Promise<InMessage> {
-		return await this.service.getAsync(`api/in-messages/${shortNumberId}/${encodeURIComponent(transactionId)}`);
+		return await this.service.getAsync<InMessage>(`api/in-messages/${shortNumberId}/${encodeURIComponent(transactionId)}`);
 	}
 }

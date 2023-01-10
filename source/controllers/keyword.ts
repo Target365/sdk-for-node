@@ -10,11 +10,16 @@ export class KeywordController {
 
 	public async getKeywordsAsync(shortnumberId?: string | null, keywordText?: string | null, mode?: string | null, tag?: string | null): Promise<Keyword[]> {
 		const parameters = { shortnumberId: shortnumberId, keywordText: keywordText, mode: mode, tag: tag };
-		return await this.service.getAsync('api/keywords', parameters);
+		const filterdParameters = Object.fromEntries(
+			Object.entries(parameters)
+				.filter(([_, value]) => value != null)
+				.map(([key, value]) => [key, value,]));
+
+		return await this.service.getAsync<Keyword[]>('api/keywords', filterdParameters);
 	}
 
 	public async getKeywordAsync(keywordId: string): Promise<Keyword> {
-		return await this.service.getAsync(`api/keywords/${encodeURIComponent(keywordId)}`);
+		return await this.service.getAsync<Keyword>(`api/keywords/${encodeURIComponent(keywordId)}`);
 	}
 
 	public async createKeywordAsync(keyword: Keyword): Promise<string> {

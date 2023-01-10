@@ -14,29 +14,11 @@ export class StrexController {
 	}
 
 	public async getMerchantIdsAsync(): Promise<StrexMerchant[]> {
-		return await this.service.getAsync(`api/strex/merchants`);
+		return await this.service.getAsync<StrexMerchant[]>(`api/strex/merchants`);
 	}
 
 	public async getMerchantAsync(merchantId: string): Promise<StrexMerchant> {
-		return await this.service.getAsync(`api/strex/merchants/${encodeURIComponent(merchantId)}`);
-	}
-
-	public async saveMerchantAsync(merchant: StrexMerchant) {
-		let result = await this.service.updateAsync(`api/strex/merchants/${encodeURIComponent(merchant.merchantId)}`, JSON.stringify(merchant));
-
-		if (result === 204)
-			return '';
-		else
-			return 'Not saved';
-	}
-
-	public async deleteMerchantAsync(merchantId: string) {
-		let result = await this.service.deleteAsync(`api/strex/merchants/${encodeURIComponent(merchantId)}`);
-
-		if (result.status === 204)
-			return '';
-		else
-			return 'Not deleted';
+		return await this.service.getAsync<StrexMerchant>(`api/strex/merchants/${encodeURIComponent(merchantId)}`);
 	}
 
 	public async createOneTimePasswordAsync(oneTimePassword: OneTimePassword) {
@@ -44,7 +26,7 @@ export class StrexController {
 	}
 
 	public async getOneTimePasswordAsync(transactionId: string): Promise<OneTimePassword> {
-		return await this.service.getAsync(`api/strex/one-time-passwords/${encodeURIComponent(transactionId)}`);
+		return await this.service.getAsync<OneTimePassword>(`api/strex/one-time-passwords/${encodeURIComponent(transactionId)}`);
 	}
 
 	public async createStrexTransactionAsync(transaction: StrexTransaction): Promise<string> {
@@ -53,16 +35,14 @@ export class StrexController {
 	}
 
 	public async getStrexTransactionAsync(transactionId: string): Promise<StrexTransaction> {
-		return await this.service.getAsync(`api/strex/transactions/${encodeURIComponent(transactionId)}`);
+		return await this.service.getAsync<StrexTransaction>(`api/strex/transactions/${encodeURIComponent(transactionId)}`);
 	}
 
 	public async reverseStrexTransactionAsync(transactionId: string) {
 		let result: any = await this.service.deleteAsync(`api/strex/transactions/${encodeURIComponent(transactionId)}`);
 
-		if (result.status === 204)
-			return result?.headers.location.split('/').pop();
-		else
-			return 'Not reversed';
+		if (result.status != 204)
+			throw 'An unexpected error occurred';
 	}
 
 	public async getStrexValidityAsync(recipient: string, merchantId?: string): Promise<StrexUserValidity> {
@@ -74,20 +54,18 @@ export class StrexController {
 			params = { recipient: recipient };
 
 		console.log('params: '+JSON.stringify(params));
-		return await this.service.getAsync(`api/strex/validity`, params);
+		return await this.service.getAsync<StrexUserValidity>(`api/strex/validity`, params);
 	}
 
 	public async getOneClickConfigAsync(configId: string): Promise<OneClickConfig> {
-		return await this.service.getAsync(`api/one-click/configs/${encodeURIComponent(configId)}`);
+		return await this.service.getAsync<OneClickConfig>(`api/one-click/configs/${encodeURIComponent(configId)}`);
 	}
 
 	public async saveOneClickConfigAsync(config: OneClickConfig) {
 		let result = await this.service.updateAsync(`api/strex/merchants/${encodeURIComponent(config.configId)}`, JSON.stringify(config));
 
-		if (result === 204)
-			return '';
-		else
-			return 'Not saved';
+		if (result != 204)
+			throw 'An unexpected error occurred';
 	}
 
 	public async sendStrexRegistrationSmsAsync(registrationSms: StrexRegistrationSms) {

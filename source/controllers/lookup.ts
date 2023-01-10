@@ -10,6 +10,6 @@ export class LookupController {
 
 	public async getLookupAsync(msisdn: string): Promise<Lookup> {
 		const params = { msisdn: msisdn };
-		return await this.service.getAsync(`api/lookup`, params);
+		return await this.service.getAsync<Lookup>(`api/lookup`, params);
 	}
 }

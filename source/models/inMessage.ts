@@ -22,5 +22,5 @@ export default interface InMessage {
 	processed?: boolean;
 	created: Date;
 	tags: string[];
-	properties: object;
+	properties: Map<string, object>;
 }
