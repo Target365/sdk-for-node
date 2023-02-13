@@ -53,7 +53,6 @@ export class StrexController {
 		else
 			params = { recipient: recipient };
 
-		console.log('params: '+JSON.stringify(params));
 		return await this.service.getAsync<StrexUserValidity>(`api/strex/validity`, params);
 	}
 
@@ -62,7 +61,7 @@ export class StrexController {
 	}
 
 	public async saveOneClickConfigAsync(config: OneClickConfig) {
-		let result = await this.service.updateAsync(`api/strex/merchants/${encodeURIComponent(config.configId)}`, JSON.stringify(config));
+		let result = await this.service.updateAsync(`api/one-click/configs/${encodeURIComponent(config.configId)}`, JSON.stringify(config));
 
 		if (result != 204)
 			throw 'An unexpected error occurred';

@@ -45,7 +45,6 @@ export class Service {
 			let result = await axios.put(`${this.baseUrl}${path}`, data, { headers: { 'Authorization': authorization }, params: params });
 			return result.status;
 		} catch (error) {
-			console.log('update error: ' + error);
 			if (axios.isAxiosError(error)) {
 				throw error.response?.data.Message;
 			} else {
@@ -59,7 +58,6 @@ export class Service {
 			const authorization = this.getAuthorization('delete', path, '', params);
 			return await axios.delete(`${this.baseUrl}${path}`, { headers: { 'Authorization': authorization }, params: params });
 		} catch (error) {
-			console.log(JSON.stringify(error));
 			if (axios.isAxiosError(error)) {
 				throw error.response?.data.Message;
 			} else {

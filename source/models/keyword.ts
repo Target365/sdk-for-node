@@ -15,7 +15,7 @@ import PreAuthSettings from '../models/preAuthSettings'
  * @property preAuthSettings. Preauth settings.
  */
 export default interface Keyword {
-	keywordId: String;
+	keywordId: string;
 	shortNumberId: string;
 	keywordText: string;
 	mode: string;
