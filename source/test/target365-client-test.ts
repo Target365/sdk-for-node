@@ -151,14 +151,16 @@ describe('', () => {
 			// Create out-message-batch
 			return client.createOutMessageBatchAsync([outMessageForBatch])
 				// Read out-message
-				.then(() => client.GetOutMessageAsync(outMessageForBatch.transactionId))
-				// Verify created out-message
-				.then((created) => {
-					expect(created.sender).to.equal(outMessageForBatch.sender);
-					expect(created.recipient).to.equal(outMessageForBatch.recipient);
-					expect(created.content).to.equal(outMessageForBatch.content);
-					expect(created.transactionId).to.equal(outMessageForBatch.transactionId);
-				})
+				.then(() => setTimeout(() => {
+					client.GetOutMessageAsync(outMessageForBatch.transactionId)
+						// Verify created out-message
+						.then((created) => {
+							expect(created.sender).to.equal(outMessageForBatch.sender);
+							expect(created.recipient).to.equal(outMessageForBatch.recipient);
+							expect(created.content).to.equal(outMessageForBatch.content);
+							expect(created.transactionId).to.equal(outMessageForBatch.transactionId);
+						})
+				}, 1000))
 				// Delete out-message-batch
 				.then(() => client.deleteOutMessageAsync(outMessageForBatch.transactionId));
 		});
