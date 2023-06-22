@@ -34,6 +34,10 @@
     * [Verify pincode](#verify-pincode)
 * [Encoding and SMS length](#encoding-and-sms-length)
     * [Automatic character replacements](#automatic-character-replacements)
+* [Pre-authorization](#pre-authorization)
+   * [Pre-authorization via keyword](#pre-authorization-via-keyword)
+   * [Pre-authorization via API](#pre-authorization-via-api)
+   * [Rebilling with pre-authorization](#rebilling-with-pre-authorization)
 * [Testing](#testing)
     * [Fake numbers](#fake-numbers)
 
@@ -66,7 +70,7 @@ let outMessage = {
     content: 'Hello World from SMS!'
 };
 
-await serviceClient.postOutMessage(outMessage);
+serviceClient.postOutMessage(outMessage);
 ```
 
 ### Set DeliveryReport URL for an SMS
@@ -80,7 +84,7 @@ let outMessage = {
     deliveryReportUrl: 'https://your.site.com/sms/dlr'
 };
 
-await serviceClient.postOutMessage(outMessage);
+serviceClient.postOutMessage(outMessage);
 ```
 
 ### Add tags to message
@@ -94,7 +98,7 @@ let outMessage = {
     tags: ["tag1", "group/subgroup/tag2"]
 };
 
-await serviceClient.postOutMessage(outMessage);
+serviceClient.postOutMessage(outMessage);
 ```
 
 ### Schedule an SMS for later sending
@@ -108,7 +112,7 @@ let outMessage = {
     sendTime: moment().add(1, 'hours').format()
 };
 
-await serviceClient.postOutMessage(outMessage);
+serviceClient.postOutMessage(outMessage);
 ```
 
 ### Edit a scheduled SMS
@@ -149,7 +153,7 @@ let outMessage2 = {
     content: 'Hello again!'
 };
 
-await serviceClient.postOutMessageBatch([outMessage1, outMessage2]);
+serviceClient.postOutMessageBatch([outMessage1, outMessage2]);
 ```
 
 ## Payment transactions
@@ -189,7 +193,7 @@ let oneTimePassword = {
     recurring: false
 };
 
-await serviceClient.postOneTimePasswordAsync(oneTimePassword);
+serviceClient.postStrexOneTimePassword(oneTimePassword);
 
 // *** Get input from end user (eg. via web site) ***
 
@@ -217,7 +221,7 @@ let reversalTransactionId = serviceClient.reverseStrexTransaction(transactionId)
 
 ### Check status on Strex payment transaction
 This example gets a previously created Strex transaction to check its status. This method will block up to 20 seconds if the transaction is still being processed.
-```C#
+```Node
 let transaction = serviceClient.getStrexTransaction(transactionId);
 let statusCode = transaction.statusCode;
 ```
@@ -314,20 +318,20 @@ let keyword = {
     enabled: true
 };
 
-let keywordId = serviceClient.postKeywordAsync(keyword);
+let keywordId = serviceClient.postKeyword(keyword);
 ```
 
 ### Delete a keyword
 This example deletes a keyword.
 ```Node
-serviceClient.deleteKeywordAsync(keywordId);
+serviceClient.deleteKeyword(keywordId);
 ```
 ## Forwards
 
 ### SMS forward
 This example shows how SMS messages are forwarded to the keywords ForwardUrl. All sms forwards expects a response with status code 200 (OK). If the request times out or response status code differs the forward will be retried several times.
 #### Request
-```
+```http
 POST https://your-site.net/api/receive-sms HTTP/1.1
 Content-Type: application/json
 Host: your-site.net
@@ -342,7 +346,7 @@ Host: your-site.net
 ```
 
 #### Response
-```
+```http
 HTTP/1.1 200 OK
 Date: Thu, 07 Feb 2019 21:13:51 GMT
 Content-Length: 0
@@ -351,7 +355,7 @@ Content-Length: 0
 ### DLR forward
 This example shows how delivery reports (DLR) are forwarded to the outmessage DeliveryReportUrl. All DLR forwards expect a response with status code 200 (OK). If the request times out or response status code differs the forward will be retried 10 times with exponentially longer intervals for about 15 hours.
 #### Request
-```
+```http
 POST https://your-site.net/api/receive-dlr HTTP/1.1
 Content-Type: application/json
 Host: your-site.net
@@ -373,7 +377,7 @@ Host: your-site.net
 ```
 
 #### Response
-```
+```http
 HTTP/1.1 200 OK
 Date: Thu, 07 Feb 2019 21:13:51 GMT
 Content-Length: 0
@@ -433,7 +437,7 @@ Delivery reports contains two status codes, one overall called `StatusCode` and 
 ### Send pincode
 This example shows how to send pincodes to users and verify their input to validate their phonenumbers.
 #### Request
-```
+```Node
 let pincode = {
    transactionId: uuidv4(),
    recipient: '+4798079008',
@@ -442,14 +446,14 @@ let pincode = {
    suffixText: ' to log on to acme.inc'
 };
 
-await serviceClient.postPincode(pincode);
+serviceClient.postPincode(pincode);
 ```
 
 ### Verify pincode
 This example shows how to verify the pincode sent in the previous step and entered on a web page by the user. Use the TransactionId provided in the previous step.
 #### Request
-```
-boolean success = await serviceClient.getPincodeVerification(pincode.transactionId, pin);
+```Node
+boolean success = serviceClient.getPincodeVerification(pincode.transactionId, pin);
 ```
 
 ## Encoding and SMS length
@@ -491,6 +495,116 @@ Unless you spesifically set the AllowUnicode property to true, we will automatic
 |\uFEFF|(regular space)|
 
 *Please note that we might remove or add Unicode characters that are automatically replaced. This is an "best effort" to save on SMS costs!*
+
+## Pre-authorization
+Some Strex service codes require recurring billing to be authorized by the user via a confirmation sms or sms pincode.
+This can be achieved either via direct API calls or setting it up to be handled automatically via a keyword.
+
+### Pre-authorization via keyword
+Automatic pre-authorization can be activated on a keyword by either activating it in the
+PreAuth section of the keyword in Strex Connect or via the SDK
+
+```Node
+var keyword = {
+    shortNumberId: "NO-2002",
+    keywordText: "HELLO",
+    mode: "Text",
+    forwardUrl: "https://your-site.net/api/receive-sms",
+    enabled: true,
+    preAuthSettings: {
+        active: true,
+        infoText: "Info message sent before preauth message",
+        infoSender: "2002",
+        prefixMessage: "Text inserted before preauth text",
+        postfixMessage: "Text inserted after preauth text",
+        delay: delayMins,
+        merchantId: "Your merchant id",
+        serviceDescription: "Service description"
+    }
+};
+
+let keywordId = serviceClient.postKeyword(keyword);
+```
+
+In-messages forwarded to you will then look like this:
+```http
+POST https://your-site.net/api/receive-sms HTTP/1.1
+Content-Type: application/json
+
+{
+  "transactionId":"00568c6b-7baf-4869-b083-d22afc163059",
+  "created": "2021-12-06T09:50:00+00:00",
+  "keywordId": "12345678",
+  "sender":"+4798079008",
+  "recipient":"2002",
+  "content": "HELLO",
+  "properties": {
+    "ServiceId": "1234",
+    "preAuthorization": true
+  }
+}
+```
+If PreAuthorization was not successfully performed, "preAuthorization" will be "false".
+
+The new properties are ServiceId and preAuthorization. ServiceId must be added to the outmessage/transaction when doing rebilling in the "preAuthServiceId" field. 
+The ServiceId is always the same for one keyword. Incoming messages forwarded with "preAuthorization" set as "false" are not possible
+to bill via Strex Payment.
+
+### Pre-authorization via API
+Pre-authorization via API can be used with either SMS confirmation or OTP (one-time-passord). SMS confirmation is used by default if OneTimePassword isn't used.
+PreAuthServiceId is an id chosen by you and must be used for all subsequent rebilling. PreAuthServiceDescription is optional, but should be set as this text will be visible for the end user on the Strex "My Page" web page.
+
+Example using OTP-flow:
+```Node
+var transactionId = "your-unique-id";
+
+var oneTimePassword = {
+    transactionId: transactionId,
+    merchantId: "your-merchant-id",
+    recipient: "+4798079008",
+    messagePrefix: "Dear customer...",
+    messageSuffix: "Best Regards...",			
+    recurring: true,
+};
+
+serviceClient.postStrexOneTimePassword(oneTimePassword);
+
+// *** Get input from end user (eg. via web site) ***
+
+var transaction = {
+    transactionId: transactionId,
+    shortNumber: "2002",
+    recipient: "+4798079008",
+    merchantId: "your-merchant-id",
+    age: 18,
+    price: 10,
+    serviceCode: ServiceCodes.NonCommercialDonation,
+    preAuthServiceId: "your-service-id",
+    preAuthServiceDescription: "your-subscription-description",
+    invoiceText: "Donation test",
+    oneTimePassword: "code_from_end_user"
+};
+
+serviceClient.postStrexTransaction(transaction);
+```
+
+### Rebilling with pre-authorization:
+```Node
+var transaction = {
+    transactionId: "your-unique-id",
+    shortNumber: "2002",
+    recipient: "+4798079008",
+    content: "your-sms-text-to-end-user",
+    merchantId: "your-merchant-id",
+    age: 18,
+    price: 10,
+    serviceCode: ServiceCodes.NonCommercialDonation,
+    preAuthServiceId: "your-service-id",
+    invoiceText: "Donation test",
+};
+
+serviceClient.postStrexTransaction(transaction);
+```
 
 ## Testing
 
