@@ -95,7 +95,7 @@ let outMessage = {
     sender: 'Target365',
     recipient: '+4798079008',
     content: 'Hello World from SMS!',
-    tags: ["tag1", "group/subgroup/tag2"]
+    tags: ["tag1", "grouping:group/subgroup/tag2"]
 };
 
 serviceClient.postOutMessage(outMessage);
