@@ -1,4 +1,4 @@
-const uuidv4 = require('uuid/v4');
+const uuid = require('uuid');
 const fetch = require('node-fetch');
 const moment = require('moment');
 const joi = require('@hapi/joi');
@@ -63,7 +63,7 @@ function Signer(ecPrivateKeyAsString) {
      */
     this.signHeader = (key, method, uri, content) => {
         const timestamp = moment().unix();
-        const nonce = uuidv4();
+        const nonce = uuid.v4();
         const hash = content === '' ? '' : sha2.sha256(content).toString('base64');
         const message = method.toLowerCase() + uri.toLowerCase() + timestamp + nonce + hash;
 
@@ -471,11 +471,11 @@ function Client(ecPrivateKeyAsString, parameters) {
     };
 
     /**
-     * Lookup a phone number.
+     * Looks up a mobile phone number.
      *
-     * @param msisdn Phone number in international format with a leading plus e.g. '+4798079008'.
+     * @param msisdn Mobile phone number. Format is full international msisdn including a leading plus, ex: '+4798079008'.
      *
-     * @return Lookup result.
+     * @return Lookup object.
      */
     this.addressLookup = (msisdn) => {
         const object = {
@@ -490,6 +490,32 @@ function Client(ecPrivateKeyAsString, parameters) {
             const params = [new Param('msisdn', msisdn)].filter((parameter) => parameter.getValue());
 
             return doGet('api/lookup', params, {
+                200: (response) => response.json(),
+                404: (response) => null
+            });
+        });
+    };
+
+    /**
+     * Looks up address info from free text (name, address...).
+     *
+     * @param freetext Free text like name or address.
+     *
+     * @return Array of Lookup objects.
+     */
+    this.freetextLookup = (freetext) => {
+        const object = {
+            freetext: freetext
+        };
+
+        const schema = joi.object().keys({
+            freetext: joi.string().required()
+        });
+
+        return validate(object, schema, () => {
+            const params = [new Param('input', freetext)].filter((parameter) => parameter.getValue());
+
+            return doGet('api/lookup/freetext', params, {
                 200: (response) => response.json(),
                 404: (response) => null
             });

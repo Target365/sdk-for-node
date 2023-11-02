@@ -1,6 +1,6 @@
 const fs = require('fs');
 const expect = require('chai').expect;
-const uuidv4 = require('uuid/v4');
+const uuid = require('uuid');
 const moment = require('moment');
 
 const Client = require('../target365-client.js');
@@ -252,6 +252,33 @@ describe('', () => {
         });
     });
 
+    describe('FreetextLookup', () => {
+        describe('Integration', () => {
+            it('address should be looked up', () => {
+                let freetext = '+4798079008';
+
+                // Lookup and verify address
+                return client.freetextLookup(freetext).then((lookupResults) => {
+                    expect(lookupResults[0].msisdn).to.equal("+4798079008");
+                    expect(lookupResults[0].firstName).to.equal('Hans');
+                    expect(lookupResults[0].lastName).to.equal('Stjernholm');
+                    expect(lookupResults[0].gender).to.equal('M');
+                });
+            });
+        });
+
+        describe('Validation', () => {
+            describe('freetextLookup()', () => {
+                it('freetext should be required', () => {
+                    return client.freetextLookup().then((response) => {
+                        expect(response.error).to.equal('InvalidInput');
+                        expect(response.constraints).to.deep.equal(['"freetext" is required']);
+                    });
+                });
+            });
+        });
+    });
+
     describe('OutMessage', () => {
         describe('Integration', () => {
             it('out-message should be created, updated and deleted', () => {
@@ -262,14 +289,15 @@ describe('', () => {
                     recipient: '+4798079008',
                     content: 'OutMessageBatch 0001',
                     sendTime: moment().add(1, 'days').format(),
-                    transactionId: uuidv4()
+                    transactionId: uuid.v4()
                 };
 
                 let outMessage = {
                     sender: 'Target365',
                     recipient: '+4798079008',
                     content: 'OutMessage 0001',
-                    sendTime: moment().add(1, 'days').format()
+                    sendTime: moment().add(1, 'days').format(),
+                    transactionId: uuid.v4()
                 };
 
                 // Create out-message
@@ -289,7 +317,7 @@ describe('', () => {
                         transactionId: outMessage.transactionId,
                         sender: outMessage.sender,
                         recipient: outMessage.recipient,
-                        content: outMessage.content + '-test',
+                        content: outMessage.content + ' (updated)',
                         sendTime: outMessage.sendTime
                     }))
                     // Read out-message
@@ -298,7 +326,7 @@ describe('', () => {
                     .then((updated) => {
                         expect(updated.sender).to.equal(outMessage.sender);
                         expect(updated.recipient).to.equal(outMessage.recipient);
-                        expect(updated.content).to.equal(outMessage.content);
+                        expect(updated.content).to.equal(outMessage.content + ' (updated)');
                         expect(updated.transactionId).to.equal(outMessage.transactionId);
                     })
                     // Delete out-message batch
@@ -586,7 +614,7 @@ describe('', () => {
         describe('Integration', () => {
             it('strex one time password should be created and verified', () => {
                 let strexOneTimePassword = {
-                    transactionId: uuidv4(),
+                    transactionId: uuid.v4(),
                     merchantId: 'JavaSdkTest',
                     recipient: '+4798079008',
                     recurring: false
@@ -607,7 +635,7 @@ describe('', () => {
 
             it('strex transaction should be created, verified and reversed', () => {
                 let strexTransaction = {
-                    transactionId: uuidv4(),
+                    transactionId: uuid.v4(),
                     merchantId: 'JavaSdkTest',
                     shortNumber: '0000',
                     recipient: '+4798079008',
@@ -912,7 +940,7 @@ describe('', () => {
             describe('pincode', () => {
               it('pincode should be created and verified', () => {
                 let pincode = {
-                  transactionId: uuidv4(),
+                  transactionId: uuid.v4(),
                   recipient: '+4798079008',
                   sender: 'Sender'
                 };
