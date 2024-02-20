@@ -1263,6 +1263,8 @@ function Client(ecPrivateKeyAsString, parameters) {
    *   sender, // SMS Sender (originator).
    *   prefixText, // Text string which will be prepended to the pincode in the SMS message sent to the subscriber.
    *   suffixText, // Text string which will be appended to the pincode in the SMS message sent to the subscriber.
+   *   pincodeLength, // Length of pincode, 4-6 digits (optional, 4 is default).
+   *   maxAttempts, // Max attempts, 1-5 (optional, 3 is default).
    * }
    *
    * @return Void
@@ -1278,7 +1280,9 @@ function Client(ecPrivateKeyAsString, parameters) {
         recipient: joi.string().required(),
         sender: joi.string().required(),
         prefixText: joi.string().optional(),
-        suffixText: joi.string().optional()
+        suffixText: joi.string().optional(),
+        pincodeLength: joi.number().optional(),
+        maxAttempts: joi.number().optional()
       }).required()
     });
 

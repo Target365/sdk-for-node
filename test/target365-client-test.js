@@ -22,7 +22,7 @@ describe('', () => {
         client = await Promise.all([readKey('./test/private.key'), readKey('./test/public.key')]).then(([ecPrivateKeyAsString, ecPublicKeyAsString]) => {
             return new Client(ecPrivateKeyAsString, {
                 baseUrl: 'https://test.target365.io/',
-                keyName: 'JavaSdkTest'
+                keyName: 'NodeSdkTest2024'
             })
         });
     });
@@ -861,11 +861,11 @@ describe('', () => {
                 // Verify client public keys
                 return client.getClientPublicKeys()
                     .then((clientPublicKeys) => {
-                        let filteredClientPublicKeys = clientPublicKeys.filter(key => key.name.indexOf('JavaSdkTest') >= 0);
+                        let filteredClientPublicKeys = clientPublicKeys.filter(key => key.name.indexOf('NodeSdkTest2024') >= 0);
                         expect(filteredClientPublicKeys).to.have.lengthOf(1);
 
                         let clientPublicKey = filteredClientPublicKeys[0];
-                        expect(clientPublicKey.publicKeyString).to.equal('MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEH3kH4OdPQCeApKQOBNxQurzRmBGKIIYDPxcXs+UBpbcnV42Om6Rgr2QgStT0r2icb+7iuLUIvhXQYz4elBz6OQ==');
+                        expect(clientPublicKey.publicKeyString).to.equal('MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAElTQ+Camc4t1TnMNR7eftqJkSnQHW85woBpChpHZcy8AQXmU3wWI6qXZQdriMBwX28IZzlBHKRn73cD4RE0AwmQ==');
                         expect(clientPublicKey.signAlgo).to.equal('ECDsaP256');
                         expect(clientPublicKey.hashAlgo).to.equal('SHA256');
                     });
@@ -876,9 +876,9 @@ describe('', () => {
 
             it('client public key should be verified', () => {
                 // Verify client public key
-                return client.getClientPublicKey('JavaSdkTest')
+                return client.getClientPublicKey('NodeSdkTest2024')
                     .then((clientPublicKey) => {
-                        expect(clientPublicKey.publicKeyString).to.equal('MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEH3kH4OdPQCeApKQOBNxQurzRmBGKIIYDPxcXs+UBpbcnV42Om6Rgr2QgStT0r2icb+7iuLUIvhXQYz4elBz6OQ==');
+                        expect(clientPublicKey.publicKeyString).to.equal('MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAElTQ+Camc4t1TnMNR7eftqJkSnQHW85woBpChpHZcy8AQXmU3wWI6qXZQdriMBwX28IZzlBHKRn73cD4RE0AwmQ==');
                         expect(clientPublicKey.signAlgo).to.equal('ECDsaP256');
                         expect(clientPublicKey.hashAlgo).to.equal('SHA256');
                     });
