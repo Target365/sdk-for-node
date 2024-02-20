@@ -144,6 +144,8 @@ function Param(key, value) {
  */
 function Client(ecPrivateKeyAsString, parameters) {
     const signer = new Signer(ecPrivateKeyAsString);
+    const sdk = 'Node';
+    const sdkVersion = '1.8.3';
     const keyName = parameters.keyName;
     const baseUrl = parameters.baseUrl;
 
@@ -193,6 +195,8 @@ function Client(ecPrivateKeyAsString, parameters) {
         return fetch(uri, {
             method: 'get',
             headers: {
+                'X-Sdk': sdk,
+                'X-Sdk-Version': sdkVersion,
                 'Authorization': authorization
             }
         }).then((response) => handle(handlers[response.status])(response));
@@ -214,6 +218,8 @@ function Client(ecPrivateKeyAsString, parameters) {
         return fetch(uri, {
             method: 'post',
             headers: {
+                'X-Sdk': sdk,
+                'X-Sdk-Version': sdkVersion,
                 'Authorization': authorization
             },
             body: content
@@ -236,6 +242,8 @@ function Client(ecPrivateKeyAsString, parameters) {
         return fetch(uri, {
             method: 'put',
             headers: {
+                'X-Sdk': sdk,
+                'X-Sdk-Version': sdkVersion,
                 'Authorization': authorization
             },
             body: content
@@ -257,6 +265,8 @@ function Client(ecPrivateKeyAsString, parameters) {
         return fetch(uri, {
             method: 'delete',
             headers: {
+                'X-Sdk': sdk,
+                'X-Sdk-Version': sdkVersion,
                 'Authorization': authorization
             }
         }).then((response) => handle(handlers[response.status])(response));
