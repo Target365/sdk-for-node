@@ -451,11 +451,15 @@ let pincode = {
    recipient: '+4798079008',
    sender: 'Sender',
    prefixText: 'Your pin code is ',
-   suffixText: ' to log on to acme.inc'
+   suffixText: ' to log on to acme.inc',
+   pincodeLength: 4,
+   maxAttempts: 3
 };
 
 serviceClient.postPincode(pincode);
 ```
+
+prefixText, suffixText and pincodeLength are optional. If specified, pincodeLength must be between 4 and 6 and maxAttempts must be between 1 and 5.
 
 ### Verify pincode
 This example shows how to verify the pincode sent in the previous step and entered on a web page by the user. Use the TransactionId provided in the previous step.
