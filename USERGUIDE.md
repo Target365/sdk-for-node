@@ -169,7 +169,7 @@ If your service requires a minimum age of the End User, each payment transaction
 
 ### Create a Strex payment transaction
 This example creates a 1 NOK Strex payment transaction that the end user will confirm by replying "OK" to an SMS from Strex.
-You can use message_prefix and message_suffix custom properties to influence the start and end of the SMS sent by Strex.
+
 ```Node
 let transaction = {
     transactionId: uuidv4(),
@@ -179,8 +179,7 @@ let transaction = {
     price: 1,
     serviceCode: '10001',
     invoiceText: 'Donation test',
-    smsConfirmation: true,
-    properties: { "message_prefix": "Dear customer...", "message_suffix": "Best regards..." }
+    smsConfirmation: true
 };
 
 serviceClient.postStrexTransaction(transaction);
