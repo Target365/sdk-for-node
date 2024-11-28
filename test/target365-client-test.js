@@ -693,7 +693,7 @@ describe('', () => {
                     subscriptionPrice: 99,
                     subscriptionInterval: "monthly",
                     subscriptionStartSms: "Thanks for donating 99kr each month",
-                    isRecurring: true,
+                    recurring: true,
                     isRestricted: false,
                     timeout: 5,
                     age: 0
@@ -712,6 +712,7 @@ describe('', () => {
                         expect(fetched.timeout).to.equal(oneClickConfig.timeout);
                         expect(fetched.serviceCode).to.equal(oneClickConfig.serviceCode);
                         expect(fetched.invoiceText).to.equal(oneClickConfig.invoiceText);
+                        expect(fetched.recurring).to.equal(oneClickConfig.recurring);
                     })
             });
 
