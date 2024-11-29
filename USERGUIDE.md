@@ -320,7 +320,7 @@ that starts with "HELLO" to the URL "https://your-site.net/api/receive-sms".
 let keyword = {
     shortNumberId: 'NO-2002',
     keywordText: 'HELLO',
-    mode: 'Text',
+    mode: 'Startswith',
     forwardUrl: 'https://your-site.net/api/receive-sms',
     enabled: true
 };
