@@ -262,7 +262,7 @@ let config = {
     subscriptionInterval: 'monthly',
     subscriptionPrice: 99,
     subscriptionStartSms: 'Thanks for donating 99kr each month.'
-    isRecurring: true,
+    recurring: true,
     isRestricted: false,
     timeout: 5,
     age: 0
