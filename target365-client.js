@@ -145,7 +145,7 @@ function Param(key, value) {
 function Client(ecPrivateKeyAsString, parameters) {
     const signer = new Signer(ecPrivateKeyAsString);
     const sdk = 'Node';
-    const sdkVersion = '1.8.3';
+    const sdkVersion = '1.8.5';
     const keyName = parameters.keyName;
     const baseUrl = parameters.baseUrl;
 
@@ -309,7 +309,7 @@ function Client(ecPrivateKeyAsString, parameters) {
         const schema = joi.object().keys({
             shortNumberId: joi.string().optional(),
             keywordText: joi.string().optional(),
-            mode: joi.string().optional().valid('Text', 'Wildcard', 'Regex'),
+            mode: joi.string().optional().valid('Text', 'Startswith', 'Exact', 'Wildcard', 'Regex'),
             tag: joi.string().optional()
         });
 
@@ -331,7 +331,7 @@ function Client(ecPrivateKeyAsString, parameters) {
      *   keywordId, // Keyword id returned by Target365.
      *   shortNumberId, // Short number associated with keyword.
      *   keywordText, // Keyword text.
-     *   mode, // Keyword mode. Can be 'Text', 'Wildcard' or 'Regex'.
+     *   mode, // Keyword mode. Can be 'Text', 'Startswith', 'Exact', 'Wildcard' or 'Regex'.
      *   forwardUrl, // Keyword forward url to post incoming messages.
      *   enabled, // Whether keyword is enabled.
      *   created, // Creation date.
@@ -354,7 +354,7 @@ function Client(ecPrivateKeyAsString, parameters) {
                 keywordId: joi.string().optional(),
                 shortNumberId: joi.string().required(),
                 keywordText: joi.string().required(),
-                mode: joi.string().required().valid('Text', 'Wildcard', 'Regex'),
+                mode: joi.string().required().valid('Text', 'Startswith', 'Exact', 'Wildcard', 'Regex'),
                 forwardUrl: joi.string().required(),
                 enabled: joi.boolean().required(),
                 created: joi.string().optional(),
@@ -410,7 +410,7 @@ function Client(ecPrivateKeyAsString, parameters) {
      *   keywordId, // Keyword id returned by Target365.
      *   shortNumberId, // Short number associated with keyword.
      *   keywordText, // Keyword text.
-     *   mode, // Keyword mode. Can be 'Text', 'Wildcard' or 'Regex'.
+     *   mode, // Keyword mode. Can be 'Text', 'Startswith', 'Exact', 'Wildcard' or 'Regex'.
      *   forwardUrl, // Keyword forward url to post incoming messages.
      *   enabled, // Whether keyword is enabled.
      *   created, // Creation date.
@@ -433,7 +433,7 @@ function Client(ecPrivateKeyAsString, parameters) {
                 keywordId: joi.string().required(),
                 shortNumberId: joi.string().required(),
                 keywordText: joi.string().required(),
-                mode: joi.string().required().valid('Text', 'Wildcard', 'Regex'),
+                mode: joi.string().required().valid('Text', 'Startswith', 'Exact', 'Wildcard', 'Regex'),
                 forwardUrl: joi.string().required(),
                 enabled: joi.boolean().required(),
                 created: joi.string().optional(),

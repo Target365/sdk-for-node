@@ -22,7 +22,7 @@ describe('', () => {
         client = await Promise.all([readKey('./test/private.key'), readKey('./test/public.key')]).then(([ecPrivateKeyAsString, ecPublicKeyAsString]) => {
             return new Client(ecPrivateKeyAsString, {
                 baseUrl: 'https://test.target365.io/',
-                keyName: 'NodeSdkTest2024'
+                keyName: 'NodeSdkTest2025'
             })
         });
     });
@@ -39,15 +39,15 @@ describe('', () => {
             it('keyword should be created, updated and deleted', () => {
                 let keyword = {
                     shortNumberId: 'NO-0000',
-                    keywordText: 'node-sdk-test-keyword-text-0001',
-                    mode: 'Text',
-                    forwardUrl: 'https://www.node-sdk-test-keyword-text-0001.com',
+                    keywordText: 'NodeSdk-test-0001',
+                    mode: 'Startswith',
+                    forwardUrl: 'https://tempuri.org',
                     enabled: true
                 };
 
                 // Delete keyword if it exists (data cleanup)
-                return client.getKeywords({ keywordText: keyword.keywordText })
-                    .then((keywords) => Promise.all(keywords.map(k => client.deleteKeyword(k.keywordId))))
+              return client.getKeywords({ keywordText: keyword.keywordText })
+                .then(keywords => { console.log("keywords: " + JSON.stringify(keywords)); Promise.all(keywords.map(k => client.deleteKeyword(k.keywordId))); })
                     // Create keyword
                     .then(() => client.postKeyword(keyword))
                     .then((keywordId) => keyword.keywordId = keywordId)
@@ -92,10 +92,10 @@ describe('', () => {
 
         describe('Validation', () => {
             describe('getKeywords()', () => {
-                it('mode should be one of Text, Wildcard, Regex', () => {
+              it('mode should be one of Text, Startswith, Exact, Wildcard, Regex', () => {
                     return client.getKeywords({ mode: 'Invalid Mode Value' }).then((response) => {
                         expect(response.error).to.equal('InvalidInput');
-                        expect(response.constraints).to.deep.equal(['"mode" must be one of [Text, Wildcard, Regex]']);
+                      expect(response.constraints).to.deep.equal(['"mode" must be one of [Text, Startswith, Exact, Wildcard, Regex]']);
                     });
                 });
             });
@@ -127,7 +127,7 @@ describe('', () => {
                     });
                 });
 
-                it('keyword.mode should be one of Text, Wildcard, Regex', () => {
+              it('keyword.mode should be one of Text, Startswith, Exact, Wildcard, Regex', () => {
                     return client.postKeyword({
                         shortNumberId: 'ShortNumberId',
                         keywordText: 'KeywordText',
@@ -136,7 +136,7 @@ describe('', () => {
                         enabled: true
                     }).then((response) => {
                         expect(response.error).to.equal('InvalidInput');
-                        expect(response.constraints).to.deep.equal(['"mode" must be one of [Text, Wildcard, Regex]']);
+                      expect(response.constraints).to.deep.equal(['"mode" must be one of [Text, Startswith, Exact, Wildcard, Regex]']);
                     });
                 });
             });
@@ -186,7 +186,7 @@ describe('', () => {
                     });
                 });
 
-                it('keyword.mode should be one of Text, Wildcard, Regex', () => {
+                it('keyword.mode should be one of Text, Startswith, Exact, Wildcard, Regex', () => {
                     return client.putKeyword({
                         keywordId: 'KeywordId',
                         shortNumberId: 'ShortNumberId',
@@ -195,7 +195,7 @@ describe('', () => {
                         forwardUrl: 'ForwardUrl'
                     }).then((response) => {
                         expect(response.error).to.equal('InvalidInput');
-                        expect(response.constraints).to.deep.equal(['"mode" must be one of [Text, Wildcard, Regex]', '"enabled" is required']);
+                      expect(response.constraints).to.deep.equal(['"mode" must be one of [Text, Startswith, Exact, Wildcard, Regex]', '"enabled" is required']);
                     });
                 });
             });
@@ -615,7 +615,7 @@ describe('', () => {
             it('strex one time password should be created and verified', () => {
                 let strexOneTimePassword = {
                     transactionId: uuid.v4(),
-                    merchantId: 'JavaSdkTest',
+                    merchantId: 'NodeSdkTest',
                     recipient: '+4798079008',
                     recurring: false
                 };
@@ -636,7 +636,7 @@ describe('', () => {
             it('strex transaction should be created, verified and reversed', () => {
                 let strexTransaction = {
                     transactionId: uuid.v4(),
-                    merchantId: 'JavaSdkTest',
+                    merchantId: 'NodeSdkTest',
                     shortNumber: '0000',
                     recipient: '+4798079008',
                     price: 10,
@@ -682,7 +682,7 @@ describe('', () => {
                     configId: 'APITEST',
                     shortNumber: '0000',
                     price: 99,
-                    merchantId: 'JavaSdkTest',
+                    merchantId: 'NodeSdkTest',
                     businessModel: 'STREX-PAYMENT',
                     preAuthServiceId: 'MyProduct',
                     serviceCode: '14002',
@@ -717,7 +717,7 @@ describe('', () => {
             });
 
             it('strex user validity should be full', () => {
-                return client.getStrexUserValidity('+4799031520', 'JavaSdkTest')
+                return client.getStrexUserValidity('+4799031520', 'NodeSdkTest')
                     .then((userValidity) => {
                         expect(userValidity).to.equal('Full');
                     })
@@ -862,11 +862,11 @@ describe('', () => {
                 // Verify client public keys
                 return client.getClientPublicKeys()
                     .then((clientPublicKeys) => {
-                        let filteredClientPublicKeys = clientPublicKeys.filter(key => key.name.indexOf('NodeSdkTest2024') >= 0);
+                        let filteredClientPublicKeys = clientPublicKeys.filter(key => key.name.indexOf('NodeSdkTest2025') >= 0);
                         expect(filteredClientPublicKeys).to.have.lengthOf(1);
 
                         let clientPublicKey = filteredClientPublicKeys[0];
-                        expect(clientPublicKey.publicKeyString).to.equal('MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAElTQ+Camc4t1TnMNR7eftqJkSnQHW85woBpChpHZcy8AQXmU3wWI6qXZQdriMBwX28IZzlBHKRn73cD4RE0AwmQ==');
+                        expect(clientPublicKey.publicKeyString).to.equal('MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE/16x2eUXnkwAOrh21VGAUlz2dNIa2nIerFDHH9bDq9U+LuGnxmbT6/HZL+pm6XWvEMAa+ngLH7kMHHHq3iPRdQ==');
                         expect(clientPublicKey.signAlgo).to.equal('ECDsaP256');
                         expect(clientPublicKey.hashAlgo).to.equal('SHA256');
                     });
@@ -877,9 +877,9 @@ describe('', () => {
 
             it('client public key should be verified', () => {
                 // Verify client public key
-                return client.getClientPublicKey('NodeSdkTest2024')
+                return client.getClientPublicKey('NodeSdkTest2025')
                     .then((clientPublicKey) => {
-                        expect(clientPublicKey.publicKeyString).to.equal('MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAElTQ+Camc4t1TnMNR7eftqJkSnQHW85woBpChpHZcy8AQXmU3wWI6qXZQdriMBwX28IZzlBHKRn73cD4RE0AwmQ==');
+                        expect(clientPublicKey.publicKeyString).to.equal('MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE/16x2eUXnkwAOrh21VGAUlz2dNIa2nIerFDHH9bDq9U+LuGnxmbT6/HZL+pm6XWvEMAa+ngLH7kMHHHq3iPRdQ==');
                         expect(clientPublicKey.signAlgo).to.equal('ECDsaP256');
                         expect(clientPublicKey.hashAlgo).to.equal('SHA256');
                     });
