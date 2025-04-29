@@ -5,4 +5,4 @@
 **/node_modules
 /.vs
 /package-lock.json~RF19136f6d.TMP
-/test/_private.key
+/test/private.key
