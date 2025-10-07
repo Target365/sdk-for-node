@@ -179,6 +179,7 @@ let transaction = {
     price: 1,
     serviceCode: '10001',
     invoiceText: 'Donation test',
+    content: 'SMS_TEXT_TO_ENDUSER',
     smsConfirmation: true
 };
 
@@ -212,6 +213,7 @@ let transaction = {
     price: 1,
     serviceCode: '10001',
     invoiceText: 'Donation test',
+    content: 'SMS_TEXT_TO_ENDUSER',
     oneTimePassword: 'ONE_TIME_PASSWORD_FROM_USER',
 };
 
