@@ -32,7 +32,7 @@ Use this openssl command to extract the public key:
 ```
 openssl ec -in private.key -pubout -out public.key
 ```
-You can then send us the `public.key` file. The file should look something like this:
+The file should look something like this:
 ```
 -----BEGIN PUBLIC KEY-----
 MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEuVHnFqJxiBC9I5+8a8Sx66brBCz3
