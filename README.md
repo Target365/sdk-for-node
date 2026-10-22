@@ -60,7 +60,7 @@ Our production environment is a mix of per-tenant isolated environments and a sh
 #### Url: https://shared.target365.io/
 
 ### Authors and maintainers
-Target365 (<sdk@strex.no>)
+Target365 (<support@target365.no>)
 
 ### Issues / Bugs / Questions
 Please feel free to raise an issue against this repository if you have any questions or problems.
