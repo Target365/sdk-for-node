@@ -464,6 +464,7 @@ prefixText, suffixText and pincodeLength are optional. If specified, pincodeLeng
 
 ### Verify pincode
 This example shows how to verify the pincode sent in the previous step and entered on a web page by the user. Use the TransactionId provided in the previous step.
+Pincode is valid for five minutes.
 #### Request
 ```Node
 boolean success = serviceClient.getPincodeVerification(pincode.transactionId, pin);
